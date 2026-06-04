@@ -5,7 +5,7 @@ import structlog
 from app.cache import RedisCache
 from app.clients import WeatherClient
 from app.config import settings
-from app.models import WeatherResponse, CurrentWeather, HourlyEntry, get_weather_description
+from app.models import CurrentWeather, HourlyEntry, WeatherResponse, get_weather_description
 
 logger = structlog.get_logger()
 

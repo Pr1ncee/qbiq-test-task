@@ -1,9 +1,8 @@
-import pytest
 from app.models.weather import (
+    WMO_CODES,
     CurrentWeather,
     HourlyEntry,
     WeatherResponse,
-    WMO_CODES,
     get_weather_description,
 )
 

@@ -3,12 +3,12 @@ from datetime import datetime, timezone
 
 import aiohttp
 from tenacity import (
+    RetryError,
+    before_sleep_log,
     retry,
     retry_if_exception,
     stop_after_attempt,
     wait_exponential,
-    before_sleep_log,
-    RetryError,
 )
 
 from app.exceptions import CityNotFoundError, UpstreamError
@@ -47,26 +47,7 @@ class WeatherClient:
 
             async with self._session.get(url, params=params) as resp:
                 resp.raise_for_status()
-                data = {
-    "results": [
-      {
-        "id": 2643743,
-        "name": "London",
-        "latitude": 51.50853,
-        "longitude": -0.12574,
-        "elevation": 25.0,
-        "feature_code": "PPLC",
-        "country_code": "GB",
-        "admin1_id": 6269131,
-        "timezone": "Europe/London",
-        "population": 7556900,
-        "country_id": 2635167,
-        "country": "United Kingdom",
-        "admin1": "England"
-      }
-    ],
-    "generationtime_ms": 0.9
-  }#await resp.json()
+                data = await resp.json()
 
             results = data.get("results", [])
             if not results:
@@ -102,43 +83,9 @@ class WeatherClient:
                 "timezone": "UTC",
             }
 
-            return {
-                "latitude": 51.5,
-                "longitude": -0.120000124,
-                "generationtime_ms": 0.123,
-                "utc_offset_seconds": 0,
-                "timezone": "UTC",
-                "timezone_abbreviation": "UTC",
-                "elevation": 25.0,
-                "current_units": {
-                    "time": "iso8601",
-                    "interval": "seconds",
-                    "temperature_2m": "°C",
-                    "wind_speed_10m": "km/h",
-                    "weather_code": "wmo code"
-                },
-                "current": {
-                    "time": "2026-06-04T12:00",
-                    "interval": 900,
-                    "temperature_2m": 18.3,
-                    "wind_speed_10m": 14.2,
-                    "weather_code": 2
-                },
-                "hourly_units": {
-                    "time": "iso8601",
-                    "temperature_2m": "°C",
-                    "wind_speed_10m": "km/h"
-                },
-                "hourly": {
-                    "time": ["2026-06-04T00:00", "2026-06-04T01:00", "..."],
-                    "temperature_2m": [14.1, 13.8, 13.5, "..."],
-                    "wind_speed_10m": [8.2, 7.9, 7.5, "..."]
-                }
-            }
-
-            # async with self._session.get(url, params=params) as resp:
-            #     resp.raise_for_status()
-            #     return await resp.json()
+            async with self._session.get(url, params=params) as resp:
+                resp.raise_for_status()
+                return await resp.json()
 
         try:
             return await _do_fetch_weather()

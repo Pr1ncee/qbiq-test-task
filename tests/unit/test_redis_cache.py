@@ -1,4 +1,5 @@
 import fakeredis
+
 from app.cache.redis_cache import RedisCache
 
 

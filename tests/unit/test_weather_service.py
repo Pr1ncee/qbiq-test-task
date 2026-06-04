@@ -1,11 +1,12 @@
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
 from datetime import datetime, timezone
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import fakeredis
+import pytest
 
 from app.cache.redis_cache import RedisCache
-from app.services.weather_service import WeatherService
 from app.exceptions import CityNotFoundError, UpstreamError
+from app.services.weather_service import WeatherService
 
 MOCK_RAW_WEATHER = {
     "current": {

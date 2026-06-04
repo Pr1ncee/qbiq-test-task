@@ -1,9 +1,9 @@
 import re
-import pytest
-import aiohttp
 from unittest.mock import patch
+
+import aiohttp
+import pytest
 from aioresponses import aioresponses
-import asyncio
 
 from app.clients.weather_client import WeatherClient
 from app.exceptions import CityNotFoundError, UpstreamError

@@ -36,7 +36,9 @@ async def _get_service() -> WeatherService:
 async def get_weather():
     city = request.args.get("city", "").strip()
     if not city:
-        return jsonify({"error": "invalid_request", "message": "Missing required parameter: city"}), 400
+        return jsonify(
+            {"error": "invalid_request", "message": "Missing required parameter: city"}
+        ), 400
 
     try:
         service = await _get_service()
