@@ -43,7 +43,9 @@ class WeatherClient:
         @_make_retry_decorator()
         async def _do_geocode() -> tuple[str, float, float]:
             url = f"{self._geo_url}/v1/search"
-            params = {"name": city, "count": 1, "language": "en", "format": "json"}
+            params: dict[str, str | int] = {
+                "name": city, "count": 1, "language": "en", "format": "json"
+            }
 
             async with self._session.get(url, params=params) as resp:
                 resp.raise_for_status()
@@ -73,7 +75,7 @@ class WeatherClient:
         async def _do_fetch_weather() -> dict:
             url = f"{self._base_url}/v1/forecast"
             today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-            params = {
+            params: dict[str, str | float] = {
                 "latitude": lat,
                 "longitude": lon,
                 "current": "temperature_2m,wind_speed_10m,weather_code",

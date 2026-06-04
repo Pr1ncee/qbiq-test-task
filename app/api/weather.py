@@ -1,4 +1,5 @@
 import time
+from typing import TYPE_CHECKING, cast
 
 import aiohttp
 import structlog
@@ -9,6 +10,9 @@ from app.config import settings
 from app.exceptions import CityNotFoundError, UpstreamError
 from app.services import WeatherService
 
+if TYPE_CHECKING:
+    from app import WeatherApp
+
 logger = structlog.get_logger()
 weather_bp = Blueprint("weather", __name__)
 
@@ -16,20 +20,21 @@ _start_time = time.time()
 
 
 async def _get_service() -> WeatherService:
-    if current_app.weather_service is None:
-        with current_app._service_lock:
-            if current_app.weather_service is None:
+    app = cast("WeatherApp", current_app)
+    if app.weather_service is None:
+        with app._service_lock:
+            if app.weather_service is None:
                 session = aiohttp.ClientSession()
                 client = WeatherClient(
                     base_url=settings.open_meteo_base_url,
                     geo_url=settings.open_meteo_geo_url,
                     session=session,
                 )
-                current_app.weather_service = WeatherService(
-                    cache=current_app.redis_cache,
+                app.weather_service = WeatherService(
+                    cache=app.redis_cache,
                     client=client,
                 )
-    return current_app.weather_service
+    return app.weather_service
 
 
 @weather_bp.get("/weather")
@@ -57,9 +62,10 @@ async def get_weather():
 
 @weather_bp.get("/health")
 async def health():
+    app = cast("WeatherApp", current_app)
     uptime = round(time.time() - _start_time)
     try:
-        current_app.redis_cache.ping()
+        app.redis_cache.ping()
         return jsonify({"status": "ok", "redis": "ok", "uptime_seconds": uptime})
     except Exception as e:
         logger.error("redis_health_check_failed", error=str(e))

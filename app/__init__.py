@@ -1,4 +1,5 @@
 import threading
+from typing import TYPE_CHECKING
 
 import structlog
 from flask import Flask
@@ -7,9 +8,18 @@ from redis import Redis
 from app.cache import RedisCache
 from app.config import settings
 
+if TYPE_CHECKING:
+    from app.services.weather_service import WeatherService
 
-def create_app() -> Flask:
-    app = Flask(__name__)
+
+class WeatherApp(Flask):
+    redis_cache: RedisCache
+    weather_service: "WeatherService | None"
+    _service_lock: threading.Lock
+
+
+def create_app() -> WeatherApp:
+    app = WeatherApp(__name__)
 
     structlog.configure(
         processors=[
@@ -25,7 +35,7 @@ def create_app() -> Flask:
 
     redis_client = Redis.from_url(settings.redis_url)
     app.redis_cache = RedisCache(redis_client)
-    app.weather_service = None  # lazily initialized on first async request
+    app.weather_service = None
     app._service_lock = threading.Lock()
 
     from app.api import weather_bp
