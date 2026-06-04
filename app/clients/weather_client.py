@@ -44,7 +44,10 @@ class WeatherClient:
         async def _do_geocode() -> tuple[str, float, float]:
             url = f"{self._geo_url}/v1/search"
             params: dict[str, str | int] = {
-                "name": city, "count": 1, "language": "en", "format": "json"
+                "name": city,
+                "count": 1,
+                "language": "en",
+                "format": "json",
             }
 
             async with self._session.get(url, params=params) as resp:
