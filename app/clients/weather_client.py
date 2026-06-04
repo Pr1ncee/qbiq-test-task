@@ -93,6 +93,4 @@ class WeatherClient:
             original = e.last_attempt.exception()
             raise UpstreamError(str(original)) from original
         except aiohttp.ClientError as exc:
-            raise UpstreamError(
-                f"Weather fetch request failed for ({lat}, {lon})"
-            ) from exc
+            raise UpstreamError(f"Weather fetch request failed for ({lat}, {lon})") from exc

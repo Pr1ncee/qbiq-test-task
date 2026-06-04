@@ -15,9 +15,7 @@ BASE_URL = "https://api.open-meteo.com"
 GEO_SEARCH_PATTERN = re.compile(r"https://geocoding-api\.open-meteo\.com/v1/search.*")
 FORECAST_PATTERN = re.compile(r"https://api\.open-meteo\.com/v1/forecast.*")
 
-GEO_RESPONSE = {
-    "results": [{"name": "London", "latitude": 51.51, "longitude": -0.13}]
-}
+GEO_RESPONSE = {"results": [{"name": "London", "latitude": 51.51, "longitude": -0.13}]}
 
 WEATHER_RESPONSE = {
     "current": {

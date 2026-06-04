@@ -63,10 +63,12 @@ async def health():
         return jsonify({"status": "ok", "redis": "ok", "uptime_seconds": uptime})
     except Exception as e:
         logger.error("redis_health_check_failed", error=str(e))
-        return jsonify({
-            "error": "service_unavailable",
-            "message": "Redis is unreachable",
-            "status": "error",
-            "redis": "error",
-            "uptime_seconds": uptime,
-        }), 503
+        return jsonify(
+            {
+                "error": "service_unavailable",
+                "message": "Redis is unreachable",
+                "status": "error",
+                "redis": "error",
+                "uptime_seconds": uptime,
+            }
+        ), 503

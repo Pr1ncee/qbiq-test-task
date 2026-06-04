@@ -29,9 +29,11 @@ def create_app() -> Flask:
     app._service_lock = threading.Lock()
 
     from app.api import weather_bp
+
     app.register_blueprint(weather_bp)
 
     from app.middleware import register_middleware
+
     register_middleware(app)
 
     return app

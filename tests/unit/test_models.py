@@ -35,9 +35,7 @@ def test_weather_response_pydantic_parsing():
             "weather_code": 2,
             "weather_description": "Partly cloudy",
         },
-        "hourly": [
-            {"hour": "2026-06-04T08:00", "temperature_c": 15.1, "wind_speed_kmh": 9.0}
-        ],
+        "hourly": [{"hour": "2026-06-04T08:00", "temperature_c": 15.1, "wind_speed_kmh": 9.0}],
         "cached": False,
         "fetched_at": "2026-06-04T14:30:00Z",
     }
